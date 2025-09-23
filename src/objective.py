@@ -35,9 +35,6 @@ class DiscriminatorLoss(nn.Module):
     """
     Implementation of the descriminator loss as described in the original gan paper.
 
-    NOTE: In this impl., we minimize -E[log D(x)] - E_z[log (1 - D(G(z)))],
-    instead of maxmize E[log D(x)] + E_z[log (1 - D(G(z)))]
-
     Objective:
     max_D E[log D(x)] + E_z[log (1 - D(G(z)))]          // original
     <=>

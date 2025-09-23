@@ -76,24 +76,28 @@ class Discriminator(nn.Module):
             features_d: int=128,
             kernel_size: int=4,
             stride: int=2,
-            padding: int=1
+            padding: int=1,
+            num_units_flatten: int=4,
+            leak: float=0.2,
         ) -> None:
         super().__init__()
         self.features_d = features_d
         self.net = nn.Sequential(
             nn.Conv2d(channels_img, features_d, kernel_size, stride, padding, bias=False),
-            nn.LeakyReLU(0.2, True),
+            nn.LeakyReLU(leak, True),
             nn.Conv2d(features_d, 2*features_d, kernel_size, stride, padding, bias=False),
-            nn.BatchNorm2d(2*features_d), 
-            nn.LeakyReLU(0.2, True),
+            nn.BatchNorm2d(2*features_d),
+            nn.LeakyReLU(leak, True),
             nn.Conv2d(2*features_d, 4*features_d, kernel_size, stride, padding, bias=False),
             nn.BatchNorm2d(4*features_d),
-            nn.LeakyReLU(0.2, True),
+            nn.LeakyReLU(leak, True),
             nn.Conv2d(4*features_d, 8*features_d, kernel_size, stride, padding, bias=False),
             nn.BatchNorm2d(8*features_d),
-            nn.LeakyReLU(0.2, True),
-            nn.Conv2d(8*features_d, 1, kernel_size, stride, padding),
+            nn.LeakyReLU(leak, True),
+            nn.Conv2d(8*features_d, 1, kernel_size, stride, padding, bias=False),
+            nn.BatchNorm2d(num_features=1),
             nn.Flatten(start_dim=1),
+            nn.Linear(num_units_flatten, 1)
         )
         self._initialize_weights()
 
